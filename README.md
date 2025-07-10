@@ -1,4 +1,4 @@
-# iTelemetry
+# iRacing Overlay
 
 A modern, minimal overlay for iRacing that displays a real-time input graph for brake and throttle, as well as the current gear. Designed for clarity and ease of use, this overlay helps you visualize your driving inputs while racing.
 
@@ -49,11 +49,11 @@ A modern, minimal overlay for iRacing that displays a real-time input graph for 
 npm start
 ```
 
-### Start the Backend
+---
 
-```bash
-npm run backend
-```
+## 📦 Download
+
+The latest executable is available under [Releases](https://github.com/SaltyGaben/i-telemetry/releases).
 
 ---
 
@@ -75,4 +75,4 @@ src/         # Main process, backend, preload scripts
 
 ## 📃 License
 
-MIT
+This project is licensed under the [MIT License](./LICENSE).
