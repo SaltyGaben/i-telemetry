@@ -1,11 +1,13 @@
-import { app, BrowserWindow, globalShortcut } from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron'
 import * as path from 'path'
 import { ChildProcess, fork } from 'child_process'
 
 let backendProcess: ChildProcess
+const openWindows: BrowserWindow[] = []
 
-function createWindow() {
-	const mainWindow = new BrowserWindow({
+function createMainWindow() {
+	console.log('LOG 3A: Inside createMainWindow function.')
+	const win = new BrowserWindow({
 		width: 510,
 		height: 200,
 		frame: false,
@@ -16,41 +18,76 @@ function createWindow() {
 		}
 	})
 
-	mainWindow.setIgnoreMouseEvents(true)
+	win.setIgnoreMouseEvents(true)
 
-	mainWindow.loadFile(path.join(__dirname, '..', 'frontend', 'index.html'))
+	win.loadFile(path.join(__dirname, '..', 'frontend', 'input.html'))
+	openWindows.push(win)
+}
 
-	let isDraggable = false
+function createFuelWindow() {
+	console.log('LOG 3B: Inside createFuelWindow function.')
+	const win = new BrowserWindow({
+		width: 220,
+		height: 170,
+		frame: false,
+		transparent: true,
+		alwaysOnTop: true,
+		webPreferences: {
+			preload: path.join(__dirname, 'preload.js')
+		}
+	})
+	win.setIgnoreMouseEvents(true)
+	win.loadFile(path.join(__dirname, '..', 'frontend', 'fuel.html'))
+	win.webContents.openDevTools({ mode: 'detach' })
+	openWindows.push(win)
+}
 
-	globalShortcut.register('Alt+D', () => {
-		isDraggable = !isDraggable
-		mainWindow.setIgnoreMouseEvents(!isDraggable)
-		mainWindow.setResizable(isDraggable)
-		mainWindow.webContents.send('toggle-move-mode', isDraggable)
+app.whenReady().then(() => {
+	const settingsWindow = new BrowserWindow({
+		width: 450,
+		height: 400,
+		webPreferences: { preload: path.join(__dirname, 'preload.js') }
+	})
+	settingsWindow.loadFile(path.join(__dirname, '..', 'frontend', 'settings.html'))
+
+	ipcMain.on('launch-app', (event, settings) => {
+		console.log("LOG 1: 'launch-app' event received with settings:", settings)
+		backendProcess = fork(path.join(__dirname, '..', 'src', 'server.js'))
+
+		backendProcess.send(settings)
+
+		if (settings.showGraph) {
+			console.log("LOG 2A: 'showGraph' is true. Calling createMainWindow...") // Debug log
+			createMainWindow()
+		}
+		if (settings.showFuel) {
+			console.log("LOG 2B: 'showFuel' is true. Calling createFuelWindow...") // Debug log
+			createFuelWindow()
+		}
+
+		settingsWindow.close()
 	})
 
 	globalShortcut.register('Alt+Q', () => {
 		app.quit()
 	})
 
-	mainWindow.on('resize', () => {
-		const [width, height] = mainWindow.getSize()
-		mainWindow.webContents.send('window-resized', { width, height })
+	let isEditable = false
+	globalShortcut.register('Alt+D', () => {
+		isEditable = !isEditable
+		openWindows.forEach((win) => {
+			win.setIgnoreMouseEvents(!isEditable)
+			win.setResizable(isEditable)
+			win.webContents.send('toggle-move-mode', isEditable)
+		})
 	})
 
-	// Uncomment to enable devtools
-	// mainWindow.webContents.openDevTools({ mode: 'detach' })
-}
-
-app.whenReady().then(() => {
-	const backendScriptPath = path.join(__dirname, '..', 'src', 'server.js')
-	backendProcess = fork(backendScriptPath)
-
-	createWindow()
-
-	app.on('activate', () => {
-		if (BrowserWindow.getAllWindows().length === 0) {
-			createWindow()
+	openWindows.forEach((window) => {
+		if (window && !window.isDestroyed()) {
+			window.on('resize', () => {
+				const [width, height] = window.getSize()
+				window.webContents.send('window-resized', { width, height })
+			})
 		}
 	})
 })

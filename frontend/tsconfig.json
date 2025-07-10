@@ -5,11 +5,7 @@
 		"sourceMap": true,
 		"strict": true,
 		"outDir": "./",
-
-		// THIS IS THE FIX:
-		// It tells TypeScript to NOT include @types/node or any other
-		// global types automatically. This creates a clean "browser" environment.
 		"types": []
 	},
-	"files": ["app.ts", "renderer.d.ts"]
+	"files": ["input.ts", "fuel.ts", "settings.ts", "renderer.d.ts"]
 }
