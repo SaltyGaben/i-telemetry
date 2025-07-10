@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"target": "ES2015",
+		"module": "ES6",
+		"sourceMap": true,
+		"strict": true,
+		"outDir": "./",
+
+		// THIS IS THE FIX:
+		// It tells TypeScript to NOT include @types/node or any other
+		// global types automatically. This creates a clean "browser" environment.
+		"types": []
+	},
+	"files": ["app.ts", "renderer.d.ts"]
+}

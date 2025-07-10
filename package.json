@@ -1,0 +1,26 @@
+{
+	"name": "iracing-overlay",
+	"version": "1.0.0",
+	"description": "",
+	"main": "dist/main.js",
+	"scripts": {
+		"build:main": "tsc",
+		"build:frontend": "tsc -p frontend",
+		"start": "npm run build:main && npm run build:frontend && electron .",
+		"backend": "node src/server.js"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"electron": "^31.2.1",
+		"typescript": "^5.5.4"
+	},
+	"dependencies": {
+		"@types/node": "^24.0.12",
+		"@types/ws": "^8.18.1",
+		"iracing-sdk-js": "^1.4.0",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.8.3",
+		"ws": "^8.18.3"
+	}
+}
