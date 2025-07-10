@@ -1,5 +1,5 @@
 {
-	"name": "iracing-overlay",
+	"name": "i-telemetry",
 	"version": "1.0.0",
 	"description": "",
 	"main": "dist/main.js",
@@ -7,12 +7,14 @@
 		"build:main": "tsc",
 		"build:frontend": "tsc -p frontend",
 		"start": "npm run build:main && npm run build:frontend && electron .",
-		"backend": "node src/server.js"
+		"backend": "node src/server.js",
+		"package": "npm run build:main && npm run build:frontend && electron-builder"
 	},
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
 		"electron": "^31.2.1",
+		"electron-builder": "^26.0.12",
 		"typescript": "^5.5.4"
 	},
 	"dependencies": {
@@ -22,5 +24,22 @@
 		"ts-node": "^10.9.2",
 		"typescript": "^5.8.3",
 		"ws": "^8.18.3"
+	},
+	"build": {
+		"appId": "com.saltygaben.iTelemetry",
+		"productName": "iTelemetry",
+		"files": [
+			"dist/**/*",
+			"frontend/**/*",
+			"src/server.js",
+			"package.json"
+		],
+		"win": {
+			"target": "nsis"
+		},
+		"nsis": {
+			"oneClick": false,
+			"allowToChangeInstallationDirectory": true
+		}
 	}
 }

@@ -1,5 +1,8 @@
 import { app, BrowserWindow, globalShortcut } from 'electron'
 import * as path from 'path'
+import { ChildProcess, fork } from 'child_process'
+
+let backendProcess: ChildProcess
 
 function createWindow() {
 	const mainWindow = new BrowserWindow({
@@ -40,6 +43,9 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+	const backendScriptPath = path.join(__dirname, '..', 'src', 'server.js')
+	backendProcess = fork(backendScriptPath)
+
 	createWindow()
 
 	app.on('activate', () => {
@@ -50,6 +56,7 @@ app.whenReady().then(() => {
 })
 
 app.on('will-quit', () => {
+	backendProcess.kill()
 	globalShortcut.unregisterAll()
 })
 
