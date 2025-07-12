@@ -1,0 +1,98 @@
+body {
+	font-family: sans-serif;
+	background-color: transparent;
+	color: #ffffff;
+	font-weight: bold;
+	text-shadow: 1px 1px 2px black;
+	overflow: hidden;
+	user-select: none;
+	transition: background-color 0.2s ease-in-out;
+}
+
+body.draggable {
+	background-color: rgba(40, 40, 40, 0.8);
+	-webkit-app-region: drag;
+	border: 2px dashed rgba(255, 255, 255, 0.7);
+	border-radius: 5px;
+	cursor: move;
+}
+
+.fuel-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	height: 100vh;
+	padding: 5px;
+	box-sizing: border-box;
+	gap: 5px;
+}
+
+.driver-item {
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+	border: 1px solid #444;
+	border-radius: 4px;
+	padding: 5px;
+	box-sizing: border-box;
+}
+
+.driver-name {
+	font-size: 16px;
+	text-align: center;
+	border-bottom: 1px solid #555;
+	margin-bottom: 5px;
+	padding-bottom: 2px;
+}
+
+.driver-status-container {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	border-bottom: 1px solid #555;
+	margin-bottom: 5px;
+	padding-bottom: 2px;
+}
+
+.pit-dot {
+	height: 10px;
+	width: 10px;
+	border-radius: 100%;
+	background-color: green;
+}
+
+.pit-dot.in-pits {
+	background-color: yellow;
+}
+
+.driver-status {
+	font-size: 16px;
+	text-align: center;
+}
+
+.driver-stats {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.stat-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex-basis: 30%;
+	margin-bottom: 5px;
+}
+
+.stat-value {
+	font-size: 20px;
+}
+
+.stat-label {
+	font-size: 12px;
+	opacity: 0.7;
+}
