@@ -45,19 +45,47 @@ body.draggable {
 	padding-bottom: 2px;
 }
 
+.driver-status-container {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	border-bottom: 1px solid #555;
+	margin-bottom: 5px;
+	padding-bottom: 2px;
+}
+
+.pit-dot {
+	height: 10px;
+	width: 10px;
+	border-radius: 100%;
+	background-color: green;
+}
+
+.pit-dot.in-pits {
+	background-color: yellow;
+}
+
+.driver-status {
+	font-size: 16px;
+	text-align: center;
+}
+
 .driver-stats {
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	flex-wrap: wrap; /* Allow items to wrap if needed */
+	flex-wrap: wrap;
 }
 
 .stat-item {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	flex-basis: 30%; /* Approx 3 items per row */
-	margin-bottom: 5px; /* Space between rows if wrapped */
+	flex-basis: 30%;
+	margin-bottom: 5px;
 }
 
 .stat-value {

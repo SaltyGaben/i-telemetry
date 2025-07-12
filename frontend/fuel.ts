@@ -2,11 +2,11 @@
 
 const ROLLING_AVG_LAPS = 5
 
-// --- Interfaces ---
 interface TelemetryData {
 	FuelLevel?: number
 	FuelLevelPct?: number
 	Lap?: number
+	IsOnTrack?: boolean
 }
 
 interface DriverState {
@@ -14,15 +14,13 @@ interface DriverState {
 	fuelAtLapStart: number
 	lastLapFuelUsed: number
 	fuelUsageHistory: number[]
+	isOnTrack: boolean
 }
 
-// --- State Management ---
 const driverStates = new Map<string, DriverState>()
 
-// --- Get HTML Container ---
 const fuelContainer = document.querySelector('.fuel-container')
 
-// --- WebSocket Connection ---
 function connectFuel() {
 	const ws = new WebSocket('ws://localhost:8080')
 
@@ -32,21 +30,17 @@ function connectFuel() {
 			console.error('Fuel container element not found!')
 			return
 		}
-		// console.log("Fuel Window Received Raw Data:", data); // Keep this for debugging if needed
 
-		// --- Data Normalization ---
 		let driversToShow = []
+
 		if (data.isShared) {
 			driversToShow = data.drivers
 		} else {
-			// In local mode, create a "drivers" array with just one entry.
-			// Pass the raw data object, it will contain FuelLevel, Lap, etc.
 			driversToShow = [{ driverName: 'You', telemetry: data }]
 		}
 
-		// --- Calculation and Rendering Loop ---
 		let newHtml = ''
-		// If no drivers, or no data received yet, show a generic message
+
 		if (driversToShow.length === 0 || !data) {
 			newHtml = `<div class="driver-item"><div class="driver-name">Waiting for data...</div></div>`
 		} else {
@@ -54,52 +48,38 @@ function connectFuel() {
 				const driverName = driver.driverName
 				const telemetry: TelemetryData = driver.telemetry
 
-				// Get or create the state for this driver
 				if (!driverStates.has(driverName)) {
 					driverStates.set(driverName, {
 						currentLap: 0,
 						fuelAtLapStart: 0,
 						lastLapFuelUsed: 0,
-						fuelUsageHistory: []
+						fuelUsageHistory: [],
+						isOnTrack: false
 					})
 				}
 				const state = driverStates.get(driverName)!
 
-				// Only perform calculations if essential data (Lap & FuelLevel) is present
 				if (telemetry.Lap !== undefined && telemetry.FuelLevel !== undefined) {
-					// --- CORE LAP DETECTION AND FUEL USAGE CALCULATION ---
 					if (telemetry.Lap > state.currentLap) {
-						// This block runs ONLY when a new lap is detected.
-						// Calculate fuel used on the LAP THAT JUST ENDED.
 						if (state.currentLap !== 0 && state.fuelAtLapStart > 0) {
-							// Avoid calculation for lap 0
 							const fuelUsedThisCompletedLap = state.fuelAtLapStart - telemetry.FuelLevel
 
-							// Sanity check: valid usage (not pitting/glitches)
 							if (fuelUsedThisCompletedLap > 0.1 && fuelUsedThisCompletedLap < 100) {
-								state.lastLapFuelUsed = fuelUsedThisCompletedLap // Update last lap usage
-								state.fuelUsageHistory.push(fuelUsedThisCompletedLap) // Add to history
+								state.lastLapFuelUsed = fuelUsedThisCompletedLap
+								state.fuelUsageHistory.push(fuelUsedThisCompletedLap)
 
-								// Trim history to rolling average length
 								if (state.fuelUsageHistory.length > ROLLING_AVG_LAPS) {
-									state.fuelUsageHistory.shift() // Remove oldest entry
+									state.fuelUsageHistory.shift()
 								}
 							} else {
-								// If usage is invalid, don't include it in average, but clear lastLapFuelUsed
 								state.lastLapFuelUsed = 0
 							}
 						} else {
-							// For the very first transition from Lap 0, or if fuelAtLapStart is 0,
-							// reset calculations.
 							state.lastLapFuelUsed = 0
 							state.fuelUsageHistory = []
 						}
-
-						// For the NEW lap that just started (telemetry.Lap):
-						// Update `fuelAtLapStart` to be the fuel level *at the beginning of this new lap*.
 						state.fuelAtLapStart = telemetry.FuelLevel
 					}
-					// Always update currentLap to the latest value for the next check
 					state.currentLap = telemetry.Lap
 				}
 
@@ -114,11 +94,17 @@ function connectFuel() {
 					lapsLeft = telemetry.FuelLevel / rollingAverageFuelPerLap
 				}
 
-				// --- Build the HTML for this driver's card ---
-				// Use optional chaining (?.) and nullish coalescing (??) for display
+				state.isOnTrack = telemetry.IsOnTrack || false
+				let driverStatus = state.isOnTrack ? 'On Track' : 'In Pits'
+				let pitDotClass = state.isOnTrack ? 'pit-dot' : 'pit-dot in-pits'
+
 				newHtml += `
                 <div class="driver-item">
                     <div class="driver-name">${driverName}</div>
+					<div class="driver-status-container">
+						<span class="${pitDotClass}"></span>
+						<span class="driver-status">${driverStatus}</span>
+					</div>
                     <div class="driver-stats">
                         <div class="stat-item">
                             <span class="stat-value">${telemetry.FuelLevel?.toFixed(2) ?? '0.00'}</span>
@@ -142,12 +128,10 @@ function connectFuel() {
 			}
 		}
 
-		// Update the DOM once with the complete new HTML
 		fuelContainer.innerHTML = newHtml
 	}
 }
 
-// --- Draggable Window Logic ---
 window.electronAPI.onToggleMoveMode((event, isDraggable) => {
 	document.body.classList.toggle('draggable', isDraggable)
 })

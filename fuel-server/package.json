@@ -1,0 +1,14 @@
+{
+	"name": "fuel-sharing-server",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"start": "node hub-server.js"
+	},
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"ws": "^8.18.3"
+	}
+}

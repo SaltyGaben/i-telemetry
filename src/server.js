@@ -3,13 +3,11 @@ const { WebSocketServer, WebSocket } = require('ws')
 
 const wss = new WebSocketServer({ port: 8080 })
 
-// --- State Variables ---
 let latestLocalTelemetry = {}
-let latestSharedData = [] // Will be an array of { driverName, telemetry }
+let latestSharedData = []
 let settings = { dataSource: 'local' }
 let hubConnection = null
 
-// --- 1. Listen for settings from the main process ---
 process.on('message', (newSettings) => {
 	console.log('Backend received settings:', newSettings)
 	settings = newSettings
@@ -18,14 +16,12 @@ process.on('message', (newSettings) => {
 	}
 })
 
-// --- 2. Function to connect to the remote hub ---
 function connectToHub(serverAddress) {
-	if (hubConnection) hubConnection.close() // Close any existing connection
+	if (hubConnection) hubConnection.close()
 
 	console.log(`Connecting to shared hub at ${serverAddress}`)
 	hubConnection = new WebSocket(serverAddress)
 
-	// When the hub sends us the list of all drivers, store it
 	hubConnection.on('message', (message) => {
 		try {
 			latestSharedData = JSON.parse(message)
@@ -41,20 +37,20 @@ function connectToHub(serverAddress) {
 	})
 }
 
-// --- 3. Always read local iRacing data ---
-const iracing = irsdk.init({ telemetryUpdateInterval: 250 }) // 4x per second
+const iracing = irsdk.init({ telemetryUpdateInterval: 16 })
 iracing.on('Telemetry', (data) => {
-	// A. Prepare local data for the overlays
 	latestLocalTelemetry = {
 		Throttle: data.values.Throttle,
 		Brake: data.values.Brake,
-		// Always include local fuel data for the calculation logic
+		Speed: data.values.Speed,
+		Gear: data.values.Gear,
+		IsOnTrack: data.values.IsOnTrack,
+		Abs: data.values.BrakeABSactive,
 		FuelLevel: data.values.FuelLevel,
 		FuelLevelPct: data.values.FuelLevelPct,
 		Lap: data.values.Lap
 	}
 
-	// B. If in shared mode, also REPORT local data to the hub
 	if (settings.dataSource === 'shared' && hubConnection?.readyState === WebSocket.OPEN) {
 		const payload = {
 			driverName: settings.driverName || 'Unknown',
@@ -64,23 +60,20 @@ iracing.on('Telemetry', (data) => {
 	}
 })
 
-// --- 4. Broadcast a unified data packet to all local overlays ---
 setInterval(() => {
 	let payload = {}
 
 	if (settings.dataSource === 'shared') {
-		// In shared mode, the payload is the full list from the hub
 		payload = {
 			isShared: true,
 			drivers: latestSharedData,
-			// Also include local inputs for the graph overlay
 			localInputs: {
 				Throttle: latestLocalTelemetry.Throttle,
-				Brake: latestLocalTelemetry.Brake
+				Brake: latestLocalTelemetry.Brake,
+				Gear: latestLocalTelemetry.Gear
 			}
 		}
 	} else {
-		// In local mode, the payload is just the local telemetry
 		payload = {
 			isShared: false,
 			...latestLocalTelemetry
@@ -92,4 +85,4 @@ setInterval(() => {
 			client.send(JSON.stringify(payload))
 		}
 	})
-}, 60) // Broadcast at a smooth rate
+}, 60)

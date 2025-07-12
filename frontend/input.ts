@@ -3,21 +3,33 @@
 const THROTTLE_COLOR = '#00ff00'
 const BRAKE_COLOR = '#ff0000'
 const BG_COLOR = 'rgba(34, 34, 34, 0.8)'
+const ABS_COLOR = 'rgba(239, 255, 91, 0.8)'
 
 const canvas = document.getElementById('telemetry-graph') as HTMLCanvasElement
 const ctx = canvas.getContext('2d')
 const gearDisplay = document.getElementById('gear-display') as HTMLDivElement
+const SpeedDisplay = document.getElementById('speed-display') as HTMLDivElement
 
 canvas.width = 400
 canvas.height = 150
 
 const throttleHistory: number[] = []
 const brakeHistory: number[] = []
+let absOn: boolean = false
 
 interface TelemetryData {
 	Throttle?: number
 	Brake?: number
 	Gear?: number
+	Speed?: number
+	Abs?: boolean
+	localInputs?: {
+		Throttle?: number
+		Brake?: number
+		Gear?: number
+		Speed?: number
+		Abs?: boolean
+	}
 }
 
 function drawLine(history: number[], color: string) {
@@ -37,7 +49,7 @@ function drawLine(history: number[], color: string) {
 function draw() {
 	if (!ctx) return
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
-	ctx.fillStyle = BG_COLOR
+	ctx.fillStyle = absOn ? ABS_COLOR : BG_COLOR
 	ctx.fillRect(0, 0, canvas.width, canvas.height)
 	drawLine(throttleHistory, THROTTLE_COLOR)
 	drawLine(brakeHistory, BRAKE_COLOR)
@@ -49,15 +61,39 @@ function connect() {
 	ws.onopen = () => console.log('Overlay connected to backend.')
 	ws.onmessage = (event) => {
 		const data: TelemetryData = JSON.parse(event.data)
-		throttleHistory.push(data.Throttle || 0)
-		brakeHistory.push(data.Brake || 0)
+		let throttle = 0
+		let brake = 0
+		let gear = 0
+		let speed = 0
+		let abs = false
+
+		if ('localInputs' in data && data.localInputs) {
+			throttle = data.localInputs.Throttle || 0
+			brake = data.localInputs.Brake || 0
+			gear = data.localInputs.Gear || 0
+			speed = data.localInputs.Speed || 0
+			abs = data.localInputs.Abs || false
+		} else {
+			throttle = data.Throttle || 0
+			brake = data.Brake || 0
+			gear = data.Gear || 0
+			speed = data.Speed || 0
+			abs = data.Abs || false
+		}
+
+		throttleHistory.push(throttle)
+		brakeHistory.push(brake)
+		absOn = abs
 		if (throttleHistory.length > canvas.width) throttleHistory.shift()
 		if (brakeHistory.length > canvas.width) brakeHistory.shift()
-		if (data.Gear !== undefined && gearDisplay) {
-			let gearText = String(data.Gear)
-			if (data.Gear === 0) gearText = 'N'
-			if (data.Gear === -1) gearText = 'R'
+		if (gear !== undefined && gearDisplay) {
+			let gearText = String(gear)
+			if (gear === 0) gearText = 'N'
+			if (gear === -1) gearText = 'R'
 			gearDisplay.textContent = gearText
+		}
+		if (speed !== undefined && SpeedDisplay) {
+			SpeedDisplay.textContent = String(speed)
 		}
 	}
 	ws.onclose = () => setTimeout(connect, 3000)
