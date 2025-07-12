@@ -54,7 +54,7 @@ function getWindowPosition(windowType: keyof WindowPositions, defaultPosition: W
 }
 
 function createMainWindow() {
-	const savedPosition = getWindowPosition('mainWindow', { x: 100, y: 100, width: 510, height: 200 })
+	const savedPosition = getWindowPosition('mainWindow', { x: 100, y: 100, width: 550, height: 210 })
 
 	const win = new BrowserWindow({
 		width: savedPosition.width,
@@ -123,7 +123,7 @@ function createFuelWindow() {
 }
 
 app.whenReady().then(() => {
-	const savedPosition = getWindowPosition('settingsWindow', { x: 100, y: 100, width: 450, height: 550 })
+	const savedPosition = getWindowPosition('settingsWindow', { x: 100, y: 100, width: 450, height: 650 })
 
 	const settingsWindow = new BrowserWindow({
 		width: savedPosition.width,

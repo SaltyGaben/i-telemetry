@@ -30,7 +30,7 @@ body.draggable {
 
 .driver-item {
 	width: 100%;
-	background-color: rgba(0, 0, 0, 0.2);
+	background-color: rgba(0, 0, 0, 0.6);
 	border: 1px solid #444;
 	border-radius: 4px;
 	padding: 5px;

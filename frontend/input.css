@@ -9,7 +9,7 @@ body {
 .graph-container {
 	display: flex;
 	align-items: center;
-	gap: 8px;
+	gap: 40px;
 	padding: 10px;
 }
 
@@ -20,14 +20,39 @@ body {
 .display-container {
 	display: flex;
 	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+	padding: 10px;
+}
+
+.text-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	width: 150px;
+	background-color: rgba(0, 0, 0, 0.6);
+	border: 1px solid #444;
+	padding: 10px;
+	border-radius: 8px;
+}
+
+.speed-display {
+	display: flex;
+	flex-direction: row;
+	align-items: baseline;
+	gap: 4px;
+	justify-content: center;
+	width: 100%;
 }
 
 .gear {
-	font-size: 60px;
+	font-size: 80px;
 	font-weight: bold;
 	color: #ffffff;
 	text-shadow: 2px 2px 4px black;
-	width: 60px;
+	width: 100%;
+	border-bottom: 1px solid #555;
 	text-align: center;
 	line-height: 1;
 }
@@ -37,8 +62,15 @@ body {
 	font-weight: bold;
 	color: #ffffff;
 	text-shadow: 2px 2px 4px black;
-	width: 60px;
 	text-align: center;
+	line-height: 1;
+}
+
+.unit {
+	font-size: 20px;
+	font-weight: bold;
+	color: #ffffff;
+	text-shadow: 2px 2px 4px black;
 	line-height: 1;
 }
 

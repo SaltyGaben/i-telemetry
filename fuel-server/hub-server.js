@@ -7,7 +7,7 @@ const wss = new WebSocketServer({ server })
 const PORT = 8081
 
 const driverData = new Map()
-const clientDrivers = new Map() // Track which client sent which driver data
+const clientDrivers = new Map()
 
 wss.on('connection', (ws) => {
 	console.log('A new client connected.')
@@ -19,7 +19,6 @@ wss.on('connection', (ws) => {
 			if (data.driverName && data.telemetry) {
 				driverData.set(data.driverName, data.telemetry)
 
-				// Track which client sent this driver data
 				if (!clientDrivers.has(ws)) {
 					clientDrivers.set(ws, new Set())
 				}
@@ -33,7 +32,6 @@ wss.on('connection', (ws) => {
 	ws.on('close', () => {
 		console.log('Client disconnected.')
 
-		// Remove all driver data that this client sent
 		const driversFromClient = clientDrivers.get(ws)
 		if (driversFromClient) {
 			driversFromClient.forEach((driverName) => {

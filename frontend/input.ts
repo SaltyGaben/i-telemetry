@@ -2,13 +2,13 @@
 
 const THROTTLE_COLOR = '#00ff00'
 const BRAKE_COLOR = '#ff0000'
-const BG_COLOR = 'rgba(34, 34, 34, 0.8)'
-const ABS_COLOR = 'rgba(239, 255, 91, 0.8)'
+const BG_COLOR = 'rgba(0, 0, 0, 0.6)'
+const ABS_COLOR = 'rgba(239, 255, 91, 0.6)'
 
 const canvas = document.getElementById('telemetry-graph') as HTMLCanvasElement
 const ctx = canvas.getContext('2d')
 const gearDisplay = document.getElementById('gear-display') as HTMLDivElement
-const SpeedDisplay = document.getElementById('speed-display') as HTMLDivElement
+const speedText = document.getElementById('speed-text') as HTMLDivElement
 
 canvas.width = 400
 canvas.height = 150
@@ -92,8 +92,9 @@ function connect() {
 			if (gear === -1) gearText = 'R'
 			gearDisplay.textContent = gearText
 		}
-		if (speed !== undefined && SpeedDisplay) {
-			SpeedDisplay.textContent = String(speed)
+		if (speed !== undefined && speedText) {
+			const speed_kmh = speed * 3.6
+			speedText.textContent = Math.round(speed_kmh).toString()
 		}
 	}
 	ws.onclose = () => setTimeout(connect, 3000)

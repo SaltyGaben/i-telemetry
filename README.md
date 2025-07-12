@@ -16,6 +16,12 @@ A modern, minimal overlay for iRacing that displays a real-time input graph for 
 
 ---
 
+## Example picture
+
+![iTelemetry Overlay Example](./assets/example.png)
+
+---
+
 ## ⌨️ Keyboard Shortcuts
 
 -   `Alt + Q` — Close the application
