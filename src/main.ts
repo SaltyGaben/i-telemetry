@@ -186,7 +186,9 @@ app.whenReady().then(() => {
 })
 
 app.on('will-quit', () => {
-	backendProcess.kill()
+	if (backendProcess) {
+		backendProcess.kill()
+	}
 	globalShortcut.unregisterAll()
 })
 
