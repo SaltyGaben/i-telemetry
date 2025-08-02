@@ -85,4 +85,4 @@ setInterval(() => {
 			client.send(JSON.stringify(payload))
 		}
 	})
-}, 60)
+}, 16)

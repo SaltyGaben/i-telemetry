@@ -1,5 +1,6 @@
 /// <reference path="renderer.d.ts" />
 
+const DISPLAY_HISTORY_WIDTH = 200
 const THROTTLE_COLOR = '#00ff00'
 const BRAKE_COLOR = '#ff0000'
 const BG_COLOR = 'rgba(0, 0, 0, 0.6)'
@@ -34,15 +35,29 @@ interface TelemetryData {
 
 function drawLine(history: number[], color: string) {
 	if (!ctx) return
+
 	ctx.beginPath()
 	ctx.lineWidth = 2
 	ctx.strokeStyle = color
-	history.forEach((value, index) => {
-		const x = index
-		const y = canvas.height - value * canvas.height
-		if (index === 0) ctx.moveTo(x, y)
-		else ctx.lineTo(x, y)
-	})
+
+	const startIndex = Math.max(0, history.length - DISPLAY_HISTORY_WIDTH)
+
+	const xScale = canvas.width / DISPLAY_HISTORY_WIDTH
+
+	for (let i = startIndex; i < history.length; i++) {
+		const value = history[i]
+
+		const y = canvas.height - (value || 0) * canvas.height
+
+		const x = (i - startIndex) * xScale
+
+		if (i === startIndex) {
+			ctx.moveTo(x, y)
+		} else {
+			ctx.lineTo(x, y)
+		}
+	}
+
 	ctx.stroke()
 }
 
@@ -108,20 +123,8 @@ window.electronAPI.onWindowResized((event, { width, height }) => {
 	const newCanvasWidth = width - 110
 	const newCanvasHeight = height - 50
 
-	const widthDifference = newCanvasWidth - canvas.width
-
 	canvas.width = newCanvasWidth
 	canvas.height = newCanvasHeight
-
-	if (widthDifference > 0) {
-		for (let i = 0; i < widthDifference; i++) {
-			throttleHistory.unshift(0)
-			brakeHistory.unshift(0)
-		}
-	} else if (widthDifference < 0) {
-		throttleHistory.splice(0, -widthDifference)
-		brakeHistory.splice(0, -widthDifference)
-	}
 })
 
 connect()
