@@ -30,7 +30,35 @@ button {
 	padding: 10px;
 	font-size: 16px;
 	cursor: pointer;
+	background-color: #4a4a4a;
+	color: #eee;
+	border: 1px solid #666;
+	border-radius: 4px;
+}
+
+button:hover:not(:disabled) {
+	background-color: #5a5a5a;
+}
+
+button:disabled {
+	background-color: #3a3a3a;
+	color: #888;
+	cursor: not-allowed;
 }
 .hidden {
+	display: none;
+}
+
+.error-message {
+	color: #ff6b6b;
+	background-color: #2d1b1b;
+	border: 1px solid #ff6b6b;
+	border-radius: 4px;
+	padding: 8px;
+	margin-top: 5px;
+	font-size: 14px;
+}
+
+.error-message.hidden {
 	display: none;
 }

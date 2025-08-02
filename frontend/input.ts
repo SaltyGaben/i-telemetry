@@ -107,6 +107,7 @@ function connect() {
 			if (gear === -1) gearText = 'R'
 			gearDisplay.textContent = gearText
 		}
+
 		if (speed !== undefined && speedText) {
 			const speed_kmh = speed * 3.6
 			speedText.textContent = Math.round(speed_kmh).toString()
@@ -125,6 +126,8 @@ window.electronAPI.onWindowResized((event, { width, height }) => {
 
 	canvas.width = newCanvasWidth
 	canvas.height = newCanvasHeight
+
+	draw()
 })
 
 connect()

@@ -70,7 +70,8 @@ setInterval(() => {
 			localInputs: {
 				Throttle: latestLocalTelemetry.Throttle,
 				Brake: latestLocalTelemetry.Brake,
-				Gear: latestLocalTelemetry.Gear
+				Gear: latestLocalTelemetry.Gear,
+				Speed: latestLocalTelemetry.Speed
 			}
 		}
 	} else {

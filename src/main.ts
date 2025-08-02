@@ -171,6 +171,7 @@ app.whenReady().then(() => {
 		openWindows.forEach((win) => {
 			win.setIgnoreMouseEvents(!isEditable)
 			win.setResizable(isEditable)
+			win.setAlwaysOnTop(true)
 			win.webContents.send('toggle-move-mode', isEditable)
 		})
 	})
