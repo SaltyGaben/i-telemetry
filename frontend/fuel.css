@@ -12,9 +12,16 @@ body {
 body.draggable {
 	background-color: rgba(40, 40, 40, 0.8);
 	-webkit-app-region: drag;
+	cursor: move;
+}
+
+body.draggable::after {
+	content: '';
+	position: fixed;
+	inset: 0;
 	border: 2px dashed rgba(255, 255, 255, 0.7);
 	border-radius: 5px;
-	cursor: move;
+	pointer-events: none;
 }
 
 .fuel-container {

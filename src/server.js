@@ -5,6 +5,7 @@ const wss = new WebSocketServer({ port: 8080 })
 
 let latestLocalTelemetry = {}
 let latestSharedData = []
+let latestFuelTelemetry = null
 let settings = { dataSource: 'local' }
 let hubConnection = null
 
@@ -43,20 +44,18 @@ iracing.on('Telemetry', (data) => {
 		Throttle: data.values.Throttle,
 		Brake: data.values.Brake,
 		Speed: data.values.Speed,
+		RPM: data.values.RPM,
 		Gear: data.values.Gear,
 		IsOnTrack: data.values.IsOnTrack,
 		Abs: data.values.BrakeABSactive,
 		FuelLevel: data.values.FuelLevel,
-		FuelLevelPct: data.values.FuelLevelPct,
 		Lap: data.values.Lap
 	}
 
-	if (settings.dataSource === 'shared' && hubConnection?.readyState === WebSocket.OPEN) {
-		const payload = {
-			driverName: settings.driverName || 'Unknown',
-			telemetry: data.values
-		}
-		hubConnection.send(JSON.stringify(payload))
+	latestFuelTelemetry = {
+		FuelLevel: data.values.FuelLevel,
+		IsOnTrack: data.values.IsOnTrack,
+		Lap: data.values.Lap
 	}
 })
 
@@ -71,13 +70,22 @@ setInterval(() => {
 				Throttle: latestLocalTelemetry.Throttle,
 				Brake: latestLocalTelemetry.Brake,
 				Gear: latestLocalTelemetry.Gear,
-				Speed: latestLocalTelemetry.Speed
+				Speed: latestLocalTelemetry.Speed,
+				RPM: latestLocalTelemetry.RPM,
+				Abs: latestLocalTelemetry.Abs
 			}
 		}
 	} else {
 		payload = {
 			isShared: false,
-			...latestLocalTelemetry
+			localInputs: {
+				Throttle: latestLocalTelemetry.Throttle,
+				Brake: latestLocalTelemetry.Brake,
+				Gear: latestLocalTelemetry.Gear,
+				Speed: latestLocalTelemetry.Speed,
+				RPM: latestLocalTelemetry.RPM,
+				Abs: latestLocalTelemetry.Abs
+			}
 		}
 	}
 
@@ -87,3 +95,13 @@ setInterval(() => {
 		}
 	})
 }, 16)
+
+setInterval(() => {
+	if (settings.dataSource === 'shared' && hubConnection?.readyState === WebSocket.OPEN && latestFuelTelemetry) {
+		const payload = {
+			driverName: settings.driverName || 'Unknown',
+			telemetry: latestFuelTelemetry
+		}
+		hubConnection.send(JSON.stringify(payload))
+	}
+}, 500)

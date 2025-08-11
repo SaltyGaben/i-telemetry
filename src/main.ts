@@ -19,6 +19,11 @@ interface WindowPositions {
 	settingsWindow?: WindowPosition
 }
 
+interface SavedConnectionInfo {
+	serverAddress?: string
+	driverName?: string
+}
+
 function getSettingsPath(): string {
 	const userDataPath = app.getPath('userData')
 	return path.join(userDataPath, 'window-positions.json')
@@ -51,6 +56,33 @@ function saveWindowPosition(windowType: keyof WindowPositions, position: WindowP
 function getWindowPosition(windowType: keyof WindowPositions, defaultPosition: WindowPosition): WindowPosition {
 	const positions = loadWindowPositions()
 	return positions[windowType] || defaultPosition
+}
+
+function getLastConnectionPath(): string {
+	const userDataPath = app.getPath('userData')
+	return path.join(userDataPath, 'last-connection.json')
+}
+
+function loadLastConnection(): SavedConnectionInfo {
+	try {
+		const connectionPath = getLastConnectionPath()
+		if (fs.existsSync(connectionPath)) {
+			const data = fs.readFileSync(connectionPath, 'utf8')
+			return JSON.parse(data)
+		}
+	} catch (error) {
+		console.error('Error loading last connection info:', error)
+	}
+	return {}
+}
+
+function saveLastConnection(info: SavedConnectionInfo) {
+	try {
+		const connectionPath = getLastConnectionPath()
+		fs.writeFileSync(connectionPath, JSON.stringify(info, null, 2))
+	} catch (error) {
+		console.error('Error saving last connection info:', error)
+	}
 }
 
 function createMainWindow() {
@@ -151,6 +183,18 @@ app.whenReady().then(() => {
 
 		backendProcess.send(settings)
 
+		// Persist last successful shared connection for next launch
+		try {
+			if (settings && settings.dataSource === 'shared' && settings.serverAddress) {
+				saveLastConnection({
+					serverAddress: settings.serverAddress,
+					driverName: settings.driverName
+				})
+			}
+		} catch (error) {
+			console.error('Failed to persist last connection:', error)
+		}
+
 		if (settings.showGraph) {
 			createMainWindow()
 		}
@@ -159,6 +203,11 @@ app.whenReady().then(() => {
 		}
 
 		settingsWindow.close()
+	})
+
+	// Provide saved connection info to renderer for pre-filling the form
+	ipcMain.handle('get-saved-connection', () => {
+		return loadLastConnection()
 	})
 
 	globalShortcut.register('Alt+Q', () => {

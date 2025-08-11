@@ -4,7 +4,6 @@ const ROLLING_AVG_LAPS = 5
 
 interface TelemetryData {
 	FuelLevel?: number
-	FuelLevelPct?: number
 	Lap?: number
 	IsOnTrack?: boolean
 }

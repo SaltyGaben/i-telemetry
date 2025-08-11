@@ -32,7 +32,7 @@ body {
 	flex-direction: column;
 	align-items: center;
 	gap: 4px;
-	width: 150px;
+	width: 200px;
 	background-color: rgba(0, 0, 0, 0.6);
 	border: 1px solid #444;
 	padding: 10px;
@@ -46,6 +46,7 @@ body {
 	gap: 4px;
 	justify-content: center;
 	width: 100%;
+	white-space: nowrap;
 }
 
 .gear {
@@ -64,8 +65,11 @@ body {
 	font-weight: bold;
 	color: #ffffff;
 	text-shadow: 2px 2px 4px black;
-	text-align: center;
+	text-align: right;
 	line-height: 1;
+	min-width: 3ch;
+	display: inline-block;
+	font-variant-numeric: tabular-nums;
 }
 
 .unit {
@@ -74,13 +78,24 @@ body {
 	color: #ffffff;
 	text-shadow: 2px 2px 4px black;
 	line-height: 1;
+	flex-shrink: 0;
 }
 
 body.draggable {
 	background-color: rgba(40, 40, 40, 0.8);
 	-webkit-app-region: drag;
+	cursor: move;
+}
 
+body.draggable::after {
+	content: '';
+	position: fixed;
+	inset: 0;
 	border: 2px dashed rgba(255, 255, 255, 0.7);
 	border-radius: 5px;
-	cursor: move;
+	pointer-events: none;
+}
+
+.rpm {
+	font-size: 30px;
 }

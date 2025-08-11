@@ -10,6 +10,7 @@ const canvas = document.getElementById('telemetry-graph') as HTMLCanvasElement
 const ctx = canvas.getContext('2d')
 const gearDisplay = document.getElementById('gear-display') as HTMLDivElement
 const speedText = document.getElementById('speed-text') as HTMLDivElement
+const rpmText = document.getElementById('rpm-text') as HTMLDivElement
 
 canvas.width = 400
 canvas.height = 150
@@ -19,17 +20,13 @@ const brakeHistory: number[] = []
 let absOn: boolean = false
 
 interface TelemetryData {
-	Throttle?: number
-	Brake?: number
-	Gear?: number
-	Speed?: number
-	Abs?: boolean
 	localInputs?: {
 		Throttle?: number
 		Brake?: number
 		Gear?: number
 		Speed?: number
 		Abs?: boolean
+		RPM?: number
 	}
 }
 
@@ -81,6 +78,7 @@ function connect() {
 		let gear = 0
 		let speed = 0
 		let abs = false
+		let rpm = 0
 
 		if ('localInputs' in data && data.localInputs) {
 			throttle = data.localInputs.Throttle || 0
@@ -88,12 +86,7 @@ function connect() {
 			gear = data.localInputs.Gear || 0
 			speed = data.localInputs.Speed || 0
 			abs = data.localInputs.Abs || false
-		} else {
-			throttle = data.Throttle || 0
-			brake = data.Brake || 0
-			gear = data.Gear || 0
-			speed = data.Speed || 0
-			abs = data.Abs || false
+			rpm = data.localInputs.RPM || 0
 		}
 
 		throttleHistory.push(throttle)
@@ -107,10 +100,12 @@ function connect() {
 			if (gear === -1) gearText = 'R'
 			gearDisplay.textContent = gearText
 		}
-
 		if (speed !== undefined && speedText) {
 			const speed_kmh = speed * 3.6
 			speedText.textContent = Math.round(speed_kmh).toString()
+		}
+		if (rpm !== undefined && rpmText) {
+			rpmText.textContent = Math.round(rpm).toString()
 		}
 	}
 	ws.onclose = () => setTimeout(connect, 3000)

@@ -10,6 +10,19 @@ const serverError = document.getElementById('server-error') as HTMLDivElement
 const launchButton = document.getElementById('launch-button') as HTMLButtonElement
 const driverName = document.getElementById('driver-name') as HTMLInputElement
 
+window.electronAPI.getSavedConnection?.().then((saved) => {
+	if (!saved) return
+	if (saved.serverAddress) {
+		sourceShared.checked = true
+		sourceLocal.checked = false
+		serverAddressContainer?.classList.remove('hidden')
+		serverAddress.value = saved.serverAddress
+	}
+	if (saved.driverName) {
+		driverName.value = saved.driverName
+	}
+})
+
 async function validateServerConnection(serverUrl: string): Promise<boolean> {
 	try {
 		const ws = new WebSocket(serverUrl)
@@ -18,7 +31,7 @@ async function validateServerConnection(serverUrl: string): Promise<boolean> {
 			const timeout = setTimeout(() => {
 				ws.close()
 				resolve(false)
-			}, 3000) // 3 second timeout
+			}, 3000)
 
 			ws.onopen = () => {
 				clearTimeout(timeout)
