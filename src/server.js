@@ -5,7 +5,8 @@ const wss = new WebSocketServer({ port: 8080 })
 
 let latestLocalTelemetry = {}
 let latestSharedData = []
-let latestFuelTelemetry = null
+let latestServerTelemetry = null
+let latestSessionInfo = null
 let settings = { dataSource: 'local' }
 let hubConnection = null
 
@@ -52,10 +53,36 @@ iracing.on('Telemetry', (data) => {
 		Lap: data.values.Lap
 	}
 
-	latestFuelTelemetry = {
+	latestServerTelemetry = {
 		FuelLevel: data.values.FuelLevel,
 		IsOnTrack: data.values.IsOnTrack,
-		Lap: data.values.Lap
+		Lap: data.values.Lap,
+		CarIdxLap: data.values.CarIdxLap,
+		CarIdxLapCompleted: data.values.CarIdxLapCompleted,
+		CarIdxPosition: data.values.CarIdxPosition,
+		CarIdxClassPosition: data.values.CarIdxClassPosition,
+		CarIdxClass: data.values.CarIdxClass,
+		CarIdxLastLapTime: data.values.CarIdxLastLapTime,
+		CarIdxBestLapTime: data.values.CarIdxBestLapTime,
+		LapBestLapTime: data.values.LapBestLapTime,
+		LapLastLapTime: data.values.LapLastLapTime,
+		LapCompleted: data.values.LapCompleted,
+		PlayerCarIdx: data.values.PlayerCarIdx,
+		PlayerCarTeamIncidentCount: data.values.PlayerCarTeamIncidentCount,
+		PlayerCarMyIncidentCount: data.values.PlayerCarMyIncidentCount,
+		PlayerCarPosition: data.values.PlayerCarPosition,
+		PlayerCarClassPosition: data.values.PlayerCarClassPosition
+	}
+})
+iracing.on('SessionInfo', (sessionInfo) => {
+	const drivers = sessionInfo.data.DriverInfo.Drivers.map(driver => ({
+		UserName: driver.UserName,
+		TeamName: driver.TeamName,
+		CarIdx: driver.CarIdx,
+		UserID: driver.UserID,
+	}))
+	latestSessionInfo = {
+		Drivers: drivers
 	}
 })
 
@@ -84,7 +111,10 @@ setInterval(() => {
 				Gear: latestLocalTelemetry.Gear,
 				Speed: latestLocalTelemetry.Speed,
 				RPM: latestLocalTelemetry.RPM,
-				Abs: latestLocalTelemetry.Abs
+				Abs: latestLocalTelemetry.Abs,
+				FuelLevel: latestLocalTelemetry.FuelLevel,
+				IsOnTrack: latestLocalTelemetry.IsOnTrack,
+				Lap: latestLocalTelemetry.Lap
 			}
 		}
 	}
@@ -97,10 +127,11 @@ setInterval(() => {
 }, 16)
 
 setInterval(() => {
-	if (settings.dataSource === 'shared' && hubConnection?.readyState === WebSocket.OPEN && latestFuelTelemetry) {
+	if (settings.dataSource === 'shared' && hubConnection?.readyState === WebSocket.OPEN && latestServerTelemetry && sessionInfo) {
 		const payload = {
 			driverName: settings.driverName || 'Unknown',
-			telemetry: latestFuelTelemetry
+			telemetry: latestServerTelemetry,
+			sessionInfo: latestSessionInfo
 		}
 		hubConnection.send(JSON.stringify(payload))
 	}

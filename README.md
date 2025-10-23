@@ -57,14 +57,20 @@ npm start
 
 ### Start the Fuel sharing server (optional)
 
-To use the fuel sharing server you need to either host it online or run locally and then port forward the port that the server runs on (by default 8081). Make sure you have a public IP-address if you decide to self host the fuel sharing server.
+To use the fuel sharing server you need to either host it online or run locally and then port forward the port that the server runs on (by default 8081). Make sure you have a public IP-address if you decide to self host the fuel sharing server. You can also optionally send the data to a convex database if you want to make a dashboard or use it for something else
 
 ```bash
-cd server
+cd backend
 ```
 
+### Without database connection
 ```bash
-npm start
+bun start
+```
+
+### With database connection
+```bash
+bun start --db
 ```
 
 ---
@@ -80,7 +86,7 @@ The latest executable is available under [Releases](https://github.com/SaltyGabe
 ```
 frontend/   # Overlay UI (TypeScript, HTML, CSS)
 src/        # Main process, backend, preload scripts
-server/     # Fuel sharing server
+backend/     # Fuel sharing server
 ```
 
 ---
