@@ -1,0 +1,200 @@
+{
+  "drivers": [
+    {
+      "userName": "name1",
+      "teamName": "team1",
+      "carIdx": 0
+    },
+    {
+      "userName": "name2",
+      "teamName": "team2",
+      "carIdx": 1
+    },
+    {
+      "userName": "name3",
+      "teamName": "team3",
+      "carIdx": 2
+    },
+    {
+      "userName": "name4",
+      "teamName": "team4",
+      "carIdx": 3
+    },
+    {
+      "userName": "name5",
+      "teamName": "team5",
+      "carIdx": 4
+    },
+    {
+      "userName": "name6",
+      "teamName": "team6",
+      "carIdx": 5
+    },
+    {
+      "userName": "name7",
+      "teamName": "team7",
+      "carIdx": 6
+    },
+    {
+      "userName": "name8",
+      "teamName": "team8",
+      "carIdx": 7
+    },
+    {
+      "userName": "name9",
+      "teamName": "team9",
+      "carIdx": 8
+    },
+    {
+      "userName": "name10",
+      "teamName": "team10",
+      "carIdx": 9
+    },
+    {
+      "userName": "name11",
+      "teamName": "team11",
+      "carIdx": 10
+    },
+    {
+      "userName": "name12",
+      "teamName": "team12",
+      "carIdx": 11
+    },
+    {
+      "userName": "name13",
+      "teamName": "team13",
+      "carIdx": 12
+    }
+  ],
+  "telemetryTeam": {
+    "carIdx": 8,
+    "lap": 0,
+    "fuelLevel": 54.548248291015625,
+    "incidentsTeam": 2,
+    "incidentsDriver": 2,
+    "bestLapTime": 0,
+    "lastLapTime": 0,
+    "position": 0,
+    "positionClass": 0,
+    "lapsCompleted": -1
+  },
+  "telemetryAll": [
+    {
+      "carIdx": 0,
+      "lap": -1,
+      "lapsCompleted": -1,
+      "position": 0,
+      "positionClass": 0,
+      "lastLapTime": -1,
+      "bestLapTime": -1
+    },
+    {
+      "carIdx": 1,
+      "lap": -1,
+      "lapsCompleted": -1,
+      "position": 3,
+      "positionClass": 2,
+      "lastLapTime": -1,
+      "bestLapTime": -1
+    },
+    {
+      "carIdx": 2,
+      "lap": -1,
+      "lapsCompleted": -1,
+      "position": 2,
+      "positionClass": 1,
+      "lastLapTime": -1,
+      "bestLapTime": -1
+    },
+    {
+      "carIdx": 3,
+      "lap": 8,
+      "lapsCompleted": 7,
+      "position": 4,
+      "positionClass": 3,
+      "lastLapTime": 236.7115936279297,
+      "bestLapTime": 236.28709411621094
+    },
+    {
+      "carIdx": 4,
+      "lap": -1,
+      "lapsCompleted": -1,
+      "position": 0,
+      "positionClass": 0,
+      "lastLapTime": -1,
+      "bestLapTime": -1
+    },
+    {
+      "carIdx": 5,
+      "lap": -1,
+      "lapsCompleted": -1,
+      "position": 1,
+      "positionClass": 1,
+      "lastLapTime": -1,
+      "bestLapTime": -1
+    },
+    {
+      "carIdx": 6,
+      "lap": 5,
+      "lapsCompleted": 4,
+      "position": 5,
+      "positionClass": 4,
+      "lastLapTime": 238.22279357910156,
+      "bestLapTime": 238.22279357910156
+    },
+    {
+      "carIdx": 7,
+      "lap": -1,
+      "lapsCompleted": -1,
+      "position": 0,
+      "positionClass": 0,
+      "lastLapTime": -1,
+      "bestLapTime": -1
+    },
+    {
+      "carIdx": 8,
+      "lap": 0,
+      "lapsCompleted": -1,
+      "position": 0,
+      "positionClass": 0,
+      "lastLapTime": -1,
+      "bestLapTime": -1
+    },
+    {
+      "carIdx": 9,
+      "lap": -1,
+      "lapsCompleted": -1,
+      "position": 0,
+      "positionClass": 0,
+      "lastLapTime": -1,
+      "bestLapTime": -1
+    },
+    {
+      "carIdx": 10,
+      "lap": -1,
+      "lapsCompleted": -1,
+      "position": 0,
+      "positionClass": 0,
+      "lastLapTime": -1,
+      "bestLapTime": -1
+    },
+    {
+      "carIdx": 11,
+      "lap": 0,
+      "lapsCompleted": -1,
+      "position": 0,
+      "positionClass": 0,
+      "lastLapTime": -1,
+      "bestLapTime": -1
+    },
+    {
+      "carIdx": 12,
+      "lap": -1,
+      "lapsCompleted": -1,
+      "position": 0,
+      "positionClass": 0,
+      "lastLapTime": -1,
+      "bestLapTime": -1
+    }
+  ]
+}
