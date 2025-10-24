@@ -128,10 +128,6 @@ setInterval(() => {
 
 setInterval(() => {
 	if (settings.dataSource === 'shared' && hubConnection?.readyState === WebSocket.OPEN && latestServerTelemetry) {
-		/* console.log(`Storing telemetry for driver: ${ settings.driverName}`)
-		console.log('telemetryTeam: ', latestServerTelemetry)
-		console.log('latestSessionInfo: ', latestSessionInfo) */
-
 		const payload = {
 			driverName: settings.driverName || 'Unknown',
 			telemetry: latestServerTelemetry,
