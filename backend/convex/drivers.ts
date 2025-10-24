@@ -1,5 +1,15 @@
-import { mutation } from "./_generated/server"
-import { v } from "convex/values"
+import { v } from "convex/values";
+import type { Doc } from "./_generated/dataModel";
+import { mutation, query } from "./_generated/server"
+
+export type Driver = Doc<"drivers">
+
+export const getDrivers = query({
+    args: {},
+    handler: async (ctx) => {
+        return await ctx.db.query("drivers").collect();
+    }
+})
 
 export const upsertDrivers = mutation({
     args: {

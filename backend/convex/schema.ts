@@ -27,6 +27,6 @@ export default defineSchema({
         positionClass: v.number(),
         lastLapTime: v.number(),
         bestLapTime: v.number(),
-        class: v.string()
+        class: v.number(),
     }).index("by_carIdx", ["carIdx"]),
 });

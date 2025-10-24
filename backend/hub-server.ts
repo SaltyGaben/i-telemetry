@@ -21,7 +21,7 @@ type Telemetry = {
 	CarIdxLapCompleted: number[],
 	CarIdxPosition: number[],
 	CarIdxClassPosition: number[],
-	CarIdxClass: string[],
+	CarIdxClass: number[],
 	CarIdxLastLapTime: number[],
 	CarIdxBestLapTime: number[],
 	LapBestLapTime: number,
@@ -144,7 +144,7 @@ if (USE_DB) {
 						positionClass: telemetry.CarIdxClassPosition[carIdx] ?? 0,
 						lastLapTime: telemetry.CarIdxLastLapTime[carIdx] ?? 0,
 						bestLapTime: telemetry.CarIdxBestLapTime[carIdx] ?? 0,
-						class: telemetry.CarIdxClass[carIdx] ?? ""
+						class: telemetry.CarIdxClass[carIdx] ?? 0
 					}
 
 					telemetryAllList.push(telemetryAll)
@@ -162,10 +162,6 @@ if (USE_DB) {
 					positionClass: telemetry.PlayerCarClassPosition,
 					lapsCompleted: telemetry.LapCompleted,
 				}
-
-				console.log(`Storing telemetry for driver: ${driverName}`)
-				console.log('telemetryTeam: ', telemetryTeam)
-				console.log('telemetryAll: ', telemetryAllList)
 
 				httpClient.mutation(api.telemetry.addTelemetry, {
 					telemetryTeam,
