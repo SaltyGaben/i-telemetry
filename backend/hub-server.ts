@@ -120,15 +120,20 @@ server.listen(PORT, () => {
 if (USE_DB) {
 	setInterval(() => {
 		if (latestSessionInfo.Drivers.length > 0) {
-			httpClient.mutation(api.drivers.upsertDrivers, {
+			/* httpClient.mutation(api.drivers.upsertDrivers, {
 				drivers: latestSessionInfo.Drivers.map(driver => ({
 					userName: driver.UserName,
 					teamName: driver.TeamName,
 					carIdx: driver.CarIdx,
 				})),
-			})
+			}) */
 		}
 
+		console.log('drivers: ', latestSessionInfo.Drivers.map(driver => ({
+					userName: driver.UserName,
+					teamName: driver.TeamName,
+					carIdx: driver.CarIdx,
+				})))
 		driverData.forEach((telemetry, driverName) => {
 			if (telemetry.IsOnTrack) {
 				const carIndexes = latestSessionInfo.Drivers.map(d => d.CarIdx)
@@ -154,7 +159,7 @@ if (USE_DB) {
 					lap: telemetry.Lap,
 					fuelLevel: telemetry.FuelLevel,
 					incidentsTeam: telemetry.PlayerCarTeamIncidentCount,
-					incidentsDriver: telemetry.PlayerCarMyIncidentCount,
+					incidentsDriver: telemetry.PlayerCarMyIncidentCount, 
 					bestLapTime: telemetry.LapBestLapTime,
 					lastLapTime: telemetry.LapLastLapTime,
 					position: telemetry.PlayerCarPosition,
@@ -162,10 +167,14 @@ if (USE_DB) {
 					lapsCompleted: telemetry.LapCompleted,
 				}
 
-				httpClient.mutation(api.telemetry.addTelemetry, {
+				console.log(`Storing telemetry for driver: ${driverName}`)
+				console.log('telemetryTeam: ', telemetryTeam)
+				console.log('telemetryAll: ', telemetryAllList)
+
+				/* httpClient.mutation(api.telemetry.addTelemetry, {
 					telemetryTeam,
 					telemetryAll: telemetryAllList,
-				})
+				}) */
 			}
 		})
 
