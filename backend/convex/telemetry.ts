@@ -27,6 +27,7 @@ export const addTelemetry = mutation({
                     positionClass: v.number(),
                     lastLapTime: v.number(),
                     bestLapTime: v.number(),
+                    class: v.string()
                 })
             )
         ),

@@ -21,7 +21,7 @@ type Telemetry = {
 	CarIdxLapCompleted: number[],
 	CarIdxPosition: number[],
 	CarIdxClassPosition: number[],
-	CarIdxClass: number[],
+	CarIdxClass: string[],
 	CarIdxLastLapTime: number[],
 	CarIdxBestLapTime: number[],
 	LapBestLapTime: number,
@@ -120,20 +120,15 @@ server.listen(PORT, () => {
 if (USE_DB) {
 	setInterval(() => {
 		if (latestSessionInfo.Drivers.length > 0) {
-			/* httpClient.mutation(api.drivers.upsertDrivers, {
+			httpClient.mutation(api.drivers.upsertDrivers, {
 				drivers: latestSessionInfo.Drivers.map(driver => ({
 					userName: driver.UserName,
 					teamName: driver.TeamName,
 					carIdx: driver.CarIdx,
 				})),
-			}) */
+			})
 		}
 
-		console.log('drivers: ', latestSessionInfo.Drivers.map(driver => ({
-					userName: driver.UserName,
-					teamName: driver.TeamName,
-					carIdx: driver.CarIdx,
-				})))
 		driverData.forEach((telemetry, driverName) => {
 			if (telemetry.IsOnTrack) {
 				const carIndexes = latestSessionInfo.Drivers.map(d => d.CarIdx)
@@ -141,7 +136,7 @@ if (USE_DB) {
 				let telemetryAllList: any[] = []
 
 				carIndexes.forEach(async (carIdx) => {
-					const telemetryTeam = {
+					const telemetryAll = {
 						carIdx: carIdx,
 						lap: telemetry.CarIdxLap[carIdx] ?? 0,
 						lapsCompleted: telemetry.CarIdxLapCompleted[carIdx] ?? 0,
@@ -149,9 +144,10 @@ if (USE_DB) {
 						positionClass: telemetry.CarIdxClassPosition[carIdx] ?? 0,
 						lastLapTime: telemetry.CarIdxLastLapTime[carIdx] ?? 0,
 						bestLapTime: telemetry.CarIdxBestLapTime[carIdx] ?? 0,
+						class: telemetry.CarIdxClass[carIdx] ?? ""
 					}
 
-					telemetryAllList.push(telemetryTeam)
+					telemetryAllList.push(telemetryAll)
 				})
 
 				const telemetryTeam = {
@@ -159,7 +155,7 @@ if (USE_DB) {
 					lap: telemetry.Lap,
 					fuelLevel: telemetry.FuelLevel,
 					incidentsTeam: telemetry.PlayerCarTeamIncidentCount,
-					incidentsDriver: telemetry.PlayerCarMyIncidentCount, 
+					incidentsDriver: telemetry.PlayerCarMyIncidentCount,
 					bestLapTime: telemetry.LapBestLapTime,
 					lastLapTime: telemetry.LapLastLapTime,
 					position: telemetry.PlayerCarPosition,
@@ -171,10 +167,10 @@ if (USE_DB) {
 				console.log('telemetryTeam: ', telemetryTeam)
 				console.log('telemetryAll: ', telemetryAllList)
 
-				/* httpClient.mutation(api.telemetry.addTelemetry, {
+				httpClient.mutation(api.telemetry.addTelemetry, {
 					telemetryTeam,
 					telemetryAll: telemetryAllList,
-				}) */
+				})
 			}
 		})
 

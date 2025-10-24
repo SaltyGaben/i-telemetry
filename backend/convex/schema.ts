@@ -6,7 +6,7 @@ export default defineSchema({
         userName: v.string(),
         teamName: v.string(),
         carIdx: v.number(),
-    }),
+    }).index("by_carIdx", ["carIdx"]),
     telemetry_team: defineTable({
         carIdx: v.number(),
         lap: v.number(),
@@ -18,7 +18,7 @@ export default defineSchema({
         position: v.number(),
         positionClass: v.number(),
         lapsCompleted: v.number(),
-    }),
+    }).index("by_carIdx", ["carIdx"]),
     telemetry_all: defineTable({
         carIdx: v.number(),
         lap: v.number(),
@@ -27,5 +27,6 @@ export default defineSchema({
         positionClass: v.number(),
         lastLapTime: v.number(),
         bestLapTime: v.number(),
-    })
+        class: v.string()
+    }).index("by_carIdx", ["carIdx"]),
 });
