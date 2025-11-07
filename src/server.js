@@ -75,14 +75,15 @@ iracing.on('Telemetry', (data) => {
 	}
 })
 iracing.on('SessionInfo', (sessionInfo) => {
-	const drivers = sessionInfo.data.DriverInfo.Drivers.map(driver => ({
+	const drivers = sessionInfo.data.DriverInfo.Drivers.map((driver) => ({
 		UserName: driver.UserName,
 		TeamName: driver.TeamName,
 		CarIdx: driver.CarIdx,
-		UserID: driver.UserID,
+		UserID: driver.UserID
 	}))
 	latestSessionInfo = {
-		Drivers: drivers
+		Drivers: drivers,
+		CurrentUserID: sessionInfo.data.DriverInfo.DriverUserID
 	}
 })
 
@@ -99,7 +100,10 @@ setInterval(() => {
 				Gear: latestLocalTelemetry.Gear,
 				Speed: latestLocalTelemetry.Speed,
 				RPM: latestLocalTelemetry.RPM,
-				Abs: latestLocalTelemetry.Abs
+				Abs: latestLocalTelemetry.Abs,
+				FuelLevel: latestLocalTelemetry.FuelLevel,
+				IsOnTrack: latestLocalTelemetry.IsOnTrack,
+				Lap: latestLocalTelemetry.Lap
 			}
 		}
 	} else {

@@ -137,7 +137,7 @@ function createFuelWindow() {
 	})
 	win.setIgnoreMouseEvents(true)
 	win.loadFile(path.join(__dirname, '..', 'frontend', 'fuel.html'))
-	//win.webContents.openDevTools({ mode: 'detach' })
+	win.webContents.openDevTools({ mode: 'detach' })
 
 	win.on('moved', () => {
 		const [x, y] = win.getPosition()

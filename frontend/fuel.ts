@@ -45,7 +45,7 @@ function connectFuel() {
 		} else {
 			for (const driver of driversToShow) {
 				const driverName = driver.driverName
-				const telemetry: TelemetryData = driver.telemetry
+				const telemetry: TelemetryData = data.isShared ? driver.telemetry : data.localInputs
 
 				if (!driverStates.has(driverName)) {
 					driverStates.set(driverName, {
@@ -93,6 +93,9 @@ function connectFuel() {
 					lapsLeft = telemetry.FuelLevel / rollingAverageFuelPerLap
 				}
 
+				console.log("data: ", telemetry.FuelLevel)
+				console.log("data: ", lapsLeft)
+				
 				state.isOnTrack = telemetry.IsOnTrack || false
 				let driverStatus = state.isOnTrack ? 'On Track' : 'In Pits'
 				let pitDotClass = state.isOnTrack ? 'pit-dot' : 'pit-dot in-pits'
