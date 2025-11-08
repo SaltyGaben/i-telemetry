@@ -132,8 +132,14 @@ setInterval(() => {
 
 setInterval(() => {
 	if (settings.dataSource === 'shared' && hubConnection?.readyState === WebSocket.OPEN && latestServerTelemetry) {
+		const driver = latestSessionInfo.Drivers.find((d) => d.UserID === latestSessionInfo.CurrentUserID)
+
+		let userName = settings.driverName
+		if (driver) {
+			userName = driver.UserName
+		}
 		const payload = {
-			driverName: settings.driverName || 'Unknown',
+			driverName: userName,
 			telemetry: latestServerTelemetry,
 			sessionInfo: latestSessionInfo
 		}

@@ -10,9 +10,9 @@ type SessionInfo = {
 		UserName: string
 		TeamName: string
 		CarIdx: number
-		UserID: string
+		UserID: number
 	}>
-	CurrentUserID: string
+	CurrentUserID: number
 }
 
 type Telemetry = {
@@ -58,9 +58,9 @@ const driverData = new Map<string, Telemetry>()
 const clientDrivers = new Map()
 let latestSessionInfo: SessionInfo = {
 	Drivers: [],
-	CurrentUserID: ''
+	CurrentUserID: 0
 }
-let userOnTrack: string = ''
+let userOnTrack: number = 0
 
 ws.on('connection', (ws: any) => {
 	console.log('A new client connected.')
@@ -110,7 +110,7 @@ setInterval(() => {
 
 	const payload = Array.from(driverData.entries()).map(([driverName, telemetry]) => ({
 		driverInfo: {
-			UserID: latestSessionInfo.Drivers.find((d) => d.UserName === driverName)?.UserID ?? '',
+			UserID: latestSessionInfo.Drivers.find((d) => d.UserName === driverName)?.UserID ?? 0,
 			UserName: driverName
 		},
 		telemetry

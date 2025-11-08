@@ -35,7 +35,7 @@ function connectFuel() {
 		if (data.isShared) {
 			driversToShow = data.drivers
 		} else {
-			driversToShow = [{ driverName: 'You', telemetry: data }]
+			driversToShow = [{ driverInfo: { UserName: 'You' }, telemetry: data }]
 		}
 
 		let newHtml = ''
@@ -44,7 +44,7 @@ function connectFuel() {
 			newHtml = `<div class="driver-item"><div class="driver-name">Waiting for data...</div></div>`
 		} else {
 			for (const driver of driversToShow) {
-				const driverName = driver.driverName
+				const driverName = driver.driverInfo.UserName
 				const telemetry: TelemetryData = data.isShared ? driver.telemetry : data.localInputs
 
 				if (!driverStates.has(driverName)) {
@@ -93,9 +93,6 @@ function connectFuel() {
 					lapsLeft = telemetry.FuelLevel / rollingAverageFuelPerLap
 				}
 
-				console.log("data: ", telemetry.FuelLevel)
-				console.log("data: ", lapsLeft)
-				
 				state.isOnTrack = telemetry.IsOnTrack || false
 				let driverStatus = state.isOnTrack ? 'On Track' : 'In Pits'
 				let pitDotClass = state.isOnTrack ? 'pit-dot' : 'pit-dot in-pits'
