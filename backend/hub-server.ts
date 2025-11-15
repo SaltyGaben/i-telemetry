@@ -169,8 +169,6 @@ if (USE_DB) {
 
 				const driver = latestSessionInfo.Drivers.find((d) => d.UserID === userOnTrack) ?? latestSessionInfo.Drivers.find((d) => d.CarIdx === driversCar)
 
-				console.log('drivers car: ', driver)
-
 				const telemetryTeam = {
 					carIdx: telemetry.PlayerCarIdx,
 					userID: driver?.UserID ?? -1,
