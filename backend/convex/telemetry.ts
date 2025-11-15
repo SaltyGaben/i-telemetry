@@ -25,6 +25,7 @@ export const addTelemetry = mutation({
 			v.object({
 				carIdx: v.number(),
 				userID: v.number(),
+				userName: v.string(),
 				lap: v.number(),
 				fuelLevel: v.number(),
 				incidentsTeam: v.number(),

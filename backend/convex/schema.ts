@@ -12,6 +12,7 @@ export default defineSchema({
 		.index('by_userID', ['userID']),
 	telemetry_team: defineTable({
 		userID: v.number(),
+		userName: v.string(),
 		carIdx: v.number(),
 		lap: v.number(),
 		fuelLevel: v.number(),

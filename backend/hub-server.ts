@@ -161,9 +161,12 @@ if (USE_DB) {
 					telemetryAllList.push(telemetryAll)
 				})
 
+				const userName = latestSessionInfo.Drivers.find((d) => d.UserID === userOnTrack)?.UserName ?? 'Unkown'
+
 				const telemetryTeam = {
 					carIdx: telemetry.PlayerCarIdx,
 					userID: userOnTrack,
+					userName: userName,
 					lap: telemetry.Lap,
 					fuelLevel: telemetry.FuelLevel,
 					incidentsTeam: telemetry.PlayerCarTeamIncidentCount,
