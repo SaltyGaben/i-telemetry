@@ -13,6 +13,7 @@ type SessionInfo = {
 		UserID: number
 	}>
 	CurrentUserID: number
+	CurrentUserCarIdx: number
 }
 
 type Telemetry = {
@@ -58,9 +59,10 @@ const driverData = new Map<string, Telemetry>()
 const clientDrivers = new Map()
 let latestSessionInfo: SessionInfo = {
 	Drivers: [],
-	CurrentUserID: 0
+	CurrentUserID: 0,
+	CurrentUserCarIdx: -1
 }
-let userSendingData: number = 0
+let userOnTrack: number
 
 ws.on('connection', (ws: any) => {
 	console.log('A new client connected.')
@@ -80,7 +82,9 @@ ws.on('connection', (ws: any) => {
 			if (data.sessionInfo) {
 				latestSessionInfo = data.sessionInfo
 			}
-			userSendingData = data.sessionInfo.CurrentUserID
+			if (data.telemetry.IsOnTrack) {
+				userOnTrack = data.sessionInfo.CurrentUserID
+			}
 		} catch (e) {
 			console.error('Failed to parse message:', e)
 		}
@@ -161,10 +165,11 @@ if (USE_DB) {
 					telemetryAllList.push(telemetryAll)
 				})
 
-				const driversCar = latestSessionInfo.Drivers.find((d) => d.UserID === userSendingData)?.CarIdx
+				const driversCar = latestSessionInfo.CurrentUserCarIdx
 
-				const driver =
-					latestSessionInfo.Drivers.find((d) => d.UserID === userSendingData) ?? latestSessionInfo.Drivers.find((d) => d.CarIdx === driversCar)
+				const driver = latestSessionInfo.Drivers.find((d) => d.UserID === userOnTrack) ?? latestSessionInfo.Drivers.find((d) => d.CarIdx === driversCar)
+
+				console.log('drivers car: ', driver)
 
 				const telemetryTeam = {
 					carIdx: telemetry.PlayerCarIdx,
@@ -187,5 +192,5 @@ if (USE_DB) {
 				})
 			}
 		})
-	}, 30000)
+	}, 500)
 }

@@ -84,7 +84,8 @@ iracing.on('SessionInfo', (sessionInfo) => {
 
 	latestSessionInfo = {
 		Drivers: drivers,
-		CurrentUserID: sessionInfo.data.DriverInfo.DriverUserID
+		CurrentUserID: sessionInfo.data.DriverInfo.DriverUserID,
+		CurrentUserCarIdx: sessionInfo.data.DriverInfo.DriverCarIdx
 	}
 })
 
