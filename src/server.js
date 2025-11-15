@@ -81,7 +81,7 @@ iracing.on('SessionInfo', (sessionInfo) => {
 		CarIdx: driver.CarIdx,
 		UserID: driver.UserID
 	}))
-	console.log('latestdata: ', sessionInfo.data.DriverInfo)
+
 	latestSessionInfo = {
 		Drivers: drivers,
 		CurrentUserID: sessionInfo.data.DriverInfo.DriverUserID
