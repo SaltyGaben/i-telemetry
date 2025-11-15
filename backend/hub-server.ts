@@ -80,9 +80,7 @@ ws.on('connection', (ws: any) => {
 			if (data.sessionInfo) {
 				latestSessionInfo = data.sessionInfo
 			}
-			if (data.telemetry.IsOnTrack) {
-				userOnTrack = data.sessionInfo.CurrentUserID
-			}
+			userOnTrack = data.sessionInfo.CurrentUserID
 		} catch (e) {
 			console.error('Failed to parse message:', e)
 		}
