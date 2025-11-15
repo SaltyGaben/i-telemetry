@@ -81,6 +81,7 @@ iracing.on('SessionInfo', (sessionInfo) => {
 		CarIdx: driver.CarIdx,
 		UserID: driver.UserID
 	}))
+	console.log('latestdata: ', sessionInfo.data.DriverInfo)
 	latestSessionInfo = {
 		Drivers: drivers,
 		CurrentUserID: sessionInfo.data.DriverInfo.DriverUserID
@@ -132,14 +133,8 @@ setInterval(() => {
 
 setInterval(() => {
 	if (settings.dataSource === 'shared' && hubConnection?.readyState === WebSocket.OPEN && latestServerTelemetry) {
-		const driver = latestSessionInfo.Drivers.find((d) => d.UserID === latestSessionInfo.CurrentUserID)
-
-		let userName = settings.driverName
-		if (driver) {
-			userName = driver.UserName
-		}
 		const payload = {
-			driverName: userName,
+			driverName: settings.driverName,
 			telemetry: latestServerTelemetry,
 			sessionInfo: latestSessionInfo
 		}
