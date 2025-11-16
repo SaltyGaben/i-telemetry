@@ -145,7 +145,7 @@ if (USE_DB) {
 		const isAnyDriverOnTrack = Array.from(driverData.values()).some((telemetry) => telemetry.IsOnTrack)
 
 		driverData.forEach((telemetry, driverName) => {
-			if (telemetry.IsOnTrack || !isAnyDriverOnTrack) {
+			if (telemetry.IsOnTrack) {
 				const carIndexes = latestSessionInfo.Drivers.map((d) => d.CarIdx)
 
 				let telemetryAllList: any[] = []
